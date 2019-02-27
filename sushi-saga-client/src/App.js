@@ -7,6 +7,9 @@ const API = "http://localhost:3000/sushis"
 
 class App extends Component {
 
+  clickHandler = value => {
+    console.log(value)
+  }
   state = {
     sushis:[],
     filteredsushis:[]
@@ -23,6 +26,9 @@ class App extends Component {
     }))
     
   }
+//   changeHandler = (e) => {
+// console.log('hitting this rare handler')
+//   }
   render() {
     console.log('app render')
     console.log(this.state)
@@ -36,8 +42,9 @@ class App extends Component {
     return (
       <div className="app">
       {/* rendered sushsis to container */}
-        <SushiContainer sushis={this.state.sushis}/>
-        <Table />
+        <SushiContainer onClick={this.clickHandler}sushis={this.state.sushis}/>
+        <Table sushi={this.clickHandler()} />
+      
       </div>
     );
   }
