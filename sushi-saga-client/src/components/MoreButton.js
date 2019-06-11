@@ -1,7 +1,7 @@
 import React from 'react'
 
-const MoreButton = ({renderMoreSushi}) => {
-    return <button onClick={renderMoreSushi}>
+const MoreButton = ({ moreSushi }) => {
+    return <button onClick={moreSushi}>
             More sushi!
           </button>
 }

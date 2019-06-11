@@ -7,53 +7,51 @@ const API = "http://localhost:3000/sushis"
 
 class App extends Component {
   state = {
-    sushi: [],
-    filteredSushi: [],
+    allSushi: [],
     eatenSushi: [],
-    pageNumber: 1,
-    money: 100
+    startIndex: 0,
+    endIndex: 4,
+    money: 1000
   }
 
   componentDidMount() {
-    fetch(`${API}?_limit=4&_page=${this.state.pageNumber}`)
+    fetch(API)
     .then(res => res.json())
-    .then(data => {
-      this.setState({
-        sushi: data,
-        filteredSushi: [...data]
-      })
-    })
+    .then(data => this.setState({allSushi: data}))
   }
 
-  sushiHasBeenEaten = sushi => {
-    console.log(sushi);
-    const newMoney = this.state.money - sushi.price
+  eatSushi = sushi => {
     this.setState({
       eatenSushi: [...this.state.eatenSushi, sushi],
-      money: newMoney
+      money: this.state.money - sushi.price
     })
   }
 
-  renderMoreSushi = () => {
-    fetch(`${API}?_limit=4&_page=${this.state.pageNumber + 1}`)
-    .then(res => res.json())
-    .then(data => {
-      this.setState({
-        pageNumber: this.state.pageNumber + 1,
-        filteredSushi: [...data]
-      })
+  moreSushi = event => {
+    let { allSushi, endIndex } = this.state
+    if (endIndex >= allSushi.length) {
+      endIndex = 0
+    }
+    this.setState({
+      startIndex: endIndex,
+      endIndex: endIndex + 4
     })
   }
 
   render() {
+    const { allSushi, startIndex, endIndex } = this.state
     return (
       <div className="app">
         <SushiContainer
-          sushi={this.state.filteredSushi}
-          renderMoreSushi={this.renderMoreSushi}
-          sushiHasBeenEaten={this.sushiHasBeenEaten}
-          money={this.state.money}/>
-        <Table eatenSushi={this.state.eatenSushi} money={this.state.money} />
+        sushi={allSushi.slice(startIndex,endIndex)}
+        moreSushi={this.moreSushi}
+        eatSushi={this.eatSushi}
+        money={this.state.money}
+        eatenSushi={this.state.eatenSushi}
+        />
+        <Table
+        money={this.state.money}
+        plates={this.state.eatenSushi}/>
       </div>
     );
   }
